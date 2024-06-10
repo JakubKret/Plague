@@ -37,9 +37,6 @@ public class Human {
     public void getSick(){
         this.isInfected = true;
     }
-    public void startToInfect(){
-        this.canInfect = true;
-    }
     public static double getImmunity(){
         return immunity;
     }
