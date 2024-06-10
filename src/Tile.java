@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Tile {
+    boolean isAirport=false;
     boolean isLand=false;
     private int landModifier = 100;
     public List<Human> humans = new ArrayList<Human>();
@@ -16,5 +17,9 @@ public class Tile {
     }
     public List<Human> getPeople(){
         return humans;
+    }
+    public void createAirport()
+    {
+        isAirport = true;
     }
 }

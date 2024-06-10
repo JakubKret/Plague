@@ -1,4 +1,3 @@
-package org.example;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -7,19 +6,18 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.sql.Time;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
-public class CombinedVisualizer extends JPanel {
+public class CombinedVisualizer extends JPanel {//change name to Board , board to sth, initialize random in beginning
     public static final int WIDTH = 400;
     public static final int HEIGHT = 400;
     private BufferedImage image;
     private int maxPeoplePerTile=5;
     private double density=0.1;
     private static final double SCALE = 2.5;//1.3;
-    public static Tile[][] board = new Tile[WIDTH][HEIGHT];;
-    public static ArrayList<Human> population = new ArrayList<Human>();
+    private Tile[][] board = new Tile[WIDTH][HEIGHT];;
+    private ArrayList<Human> population = new ArrayList<Human>();
     private ArrayList<Island> islands = new ArrayList<Island>();
     public CombinedVisualizer() {
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
@@ -53,14 +51,14 @@ public class CombinedVisualizer extends JPanel {
                 board[x][y] = new Tile(gray);
                 if(board[x][y].isLand)
                 {
-                    Random random = new Random();
-                    if(random.nextDouble() < density){
-                        int number = (int) (Math.random() * (maxPeoplePerTile+1));
-                        for (int z = 0; z < number; z++) {
-                            Human human = new Human(x,y);
-                            board[x][y].humans.add(human);
-                            population.add(human);
-                        }}}
+                Random random = new Random();
+                if(random.nextDouble() < density){
+                int number = (int) (Math.random() * (maxPeoplePerTile+1));
+                for (int z = 0; z < number; z++) {
+                    Human human = new Human(x,y/*,board*/);
+                    board[x][y].humans.add(human);
+                    population.add(human);
+                }}}
 
                 if (board[x][y].isLand && !board[x][y].humans.isEmpty()) {//zoptymalizowac i polaczyc warunki by nie robic 2razy island?
                     int value = board[x][y].humans.size();
@@ -135,10 +133,21 @@ public class CombinedVisualizer extends JPanel {
             for (int y = 0; y < HEIGHT; y++) {
                 int rgb;
                 if (board[x][y].isLand && !board[x][y].humans.isEmpty()) {//zoptymalizowac i polaczyc warunki by nie robic 2razy island?
-                    int value = board[x][y].humans.size();
-                    rgb = (256-fastFloor(value*256/(2*maxPeoplePerTile) << 16)) | (256-fastFloor(value*256/(2*maxPeoplePerTile)) << 8) | fastFloor(256-value*256/(2*maxPeoplePerTile));
-
+                    int infected=0,value=0;
+                    for (Human h : board[x][y].humans) {
+                        if (h.getIsInfected()) {infected++;}
+                        else {value++;}
+                    }
+                    if (board[x][y].isAirport)
+                        rgb = 255;
+                    else if (infected==0) {
+                        rgb = (256 - fastFloor(value * 256 / (2 * maxPeoplePerTile) << 16)) | (256 - fastFloor(value * 256 / (2 * maxPeoplePerTile)) << 8) | fastFloor(256 - value * 256 / (2 * maxPeoplePerTile));
+                    }
+                    else {
+                        rgb = ((int) (Math.min((double)infected/value,1.0)*255) << 16) | (0 << 8) | 0;
+                    }
                 } else if (board[x][y].isLand) {
+
                     rgb = (0 << 16) | (255 << 8) | 0; // Green
                 } else {
                     rgb = (0 << 16) | (0 << 8) | 255; // Blue
@@ -159,10 +168,6 @@ public class CombinedVisualizer extends JPanel {
         for (ArrayList<Tile> islandTiles : lands) {
             Island island = new Island(islandTiles);
             islands.add(island);
-            Random rand = new Random();
-            int x = rand.nextInt(3);
-            x=x-1;
-            Island.climate = x;
         }
     }
 
@@ -216,6 +221,16 @@ public class CombinedVisualizer extends JPanel {
         }
     }
 
+    private void generateAirports(){
+        Random random = new Random();
+        for (Island island : islands) {
+            for (int k=0; k<(1+fastFloor(island.getIslandLand().size())/500);k++) {
+                int r = random.nextInt(island.getIslandLand().size());
+                island.setAirport(island.getIslandLand().get(r));
+                island.getIslandLand().get(r).createAirport();
+            }
+        }
+    }
 
 
     public void movePopulation() {
@@ -318,7 +333,8 @@ public class CombinedVisualizer extends JPanel {
     private static double dot(int[] g, double x, double y) {
         return g[0] * x + g[1] * y;
     }
-    public static List<Human> getPeople(int x, int y){
-        return board[x][y].humans;
+    public Tile[][] getBoard()
+    {
+        return board;
     }
 }
