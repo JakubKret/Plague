@@ -1,3 +1,4 @@
+package org.example;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -6,6 +7,7 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.sql.Time;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.Stack;
 
@@ -16,8 +18,8 @@ public class CombinedVisualizer extends JPanel {
     private int maxPeoplePerTile=5;
     private double density=0.1;
     private static final double SCALE = 2.5;//1.3;
-    private Tile[][] board = new Tile[WIDTH][HEIGHT];;
-    private ArrayList<Human> population = new ArrayList<Human>();
+    public static Tile[][] board = new Tile[WIDTH][HEIGHT];;
+    public static ArrayList<Human> population = new ArrayList<Human>();
     private ArrayList<Island> islands = new ArrayList<Island>();
     public CombinedVisualizer() {
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
@@ -51,14 +53,14 @@ public class CombinedVisualizer extends JPanel {
                 board[x][y] = new Tile(gray);
                 if(board[x][y].isLand)
                 {
-                Random random = new Random();
-                if(random.nextDouble() < density){
-                int number = (int) (Math.random() * (maxPeoplePerTile+1));
-                for (int z = 0; z < number; z++) {
-                    Human human = new Human(x,y);
-                    board[x][y].humans.add(human);
-                    population.add(human);
-                }}}
+                    Random random = new Random();
+                    if(random.nextDouble() < density){
+                        int number = (int) (Math.random() * (maxPeoplePerTile+1));
+                        for (int z = 0; z < number; z++) {
+                            Human human = new Human(x,y);
+                            board[x][y].humans.add(human);
+                            population.add(human);
+                        }}}
 
                 if (board[x][y].isLand && !board[x][y].humans.isEmpty()) {//zoptymalizowac i polaczyc warunki by nie robic 2razy island?
                     int value = board[x][y].humans.size();
@@ -157,58 +159,62 @@ public class CombinedVisualizer extends JPanel {
         for (ArrayList<Tile> islandTiles : lands) {
             Island island = new Island(islandTiles);
             islands.add(island);
+            Random rand = new Random;
+            int x = rand.nextInt(3);
+            x=x-1;
+            Island.climate = x;
         }
     }
 
 
 
-        // Method to find and group neighboring tiles
-        public ArrayList<ArrayList<Tile>> findIslands() {
-            ArrayList<ArrayList<Tile>> lands = new ArrayList<>();
+    // Method to find and group neighboring tiles
+    public ArrayList<ArrayList<Tile>> findIslands() {
+        ArrayList<ArrayList<Tile>> lands = new ArrayList<>();
 
-            boolean[][] visited = new boolean[WIDTH][HEIGHT];
+        boolean[][] visited = new boolean[WIDTH][HEIGHT];
 
-            // Iterate through each tile on the board
-            for (int i = 0; i < WIDTH; i++) {
-                for (int j = 0; j < HEIGHT; j++) {
-                    if (board[i][j].isLand && !visited[i][j]) {
-                        ArrayList<Tile> islandTiles = new ArrayList<>();
-                        dfs(board, visited, i, j, islandTiles);
-                        lands.add(islandTiles);
-                    }
-
-                }
-            }
-            return lands;
-        }
-
-        // Depth-First Search to find all connected land tiles
-        private void dfs(Tile[][] board, boolean[][] visited, int row, int col, ArrayList<Tile> islandTiles) {
-            int[] rowDirection = {-1, 1, 0, 0}; // Up, Down, Left, Right
-            int[] colDirection = {0, 0, -1, 1}; // Up, Down, Left, Right
-
-            Stack<int[]> stack = new Stack<>();
-            stack.push(new int[]{row, col});
-
-            while (!stack.isEmpty()) {
-                int[] current = stack.pop();
-                int currentRow = current[0];
-                int currentCol = current[1];
-
-                if (currentRow < 0 || currentRow >= board.length || currentCol < 0 || currentCol >= board[0].length || visited[currentRow][currentCol] || !board[currentRow][currentCol].isLand) {
-                    continue;
+        // Iterate through each tile on the board
+        for (int i = 0; i < WIDTH; i++) {
+            for (int j = 0; j < HEIGHT; j++) {
+                if (board[i][j].isLand && !visited[i][j]) {
+                    ArrayList<Tile> islandTiles = new ArrayList<>();
+                    dfs(board, visited, i, j, islandTiles);
+                    lands.add(islandTiles);
                 }
 
-                visited[currentRow][currentCol] = true;
-                islandTiles.add(board[currentRow][currentCol]);
-
-                for (int k = 0; k < 4; k++) {
-                    int newRow = currentRow + rowDirection[k];
-                    int newCol = currentCol + colDirection[k];
-                    stack.push(new int[]{newRow, newCol});
-                }
             }
         }
+        return lands;
+    }
+
+    // Depth-First Search to find all connected land tiles
+    private void dfs(Tile[][] board, boolean[][] visited, int row, int col, ArrayList<Tile> islandTiles) {
+        int[] rowDirection = {-1, 1, 0, 0}; // Up, Down, Left, Right
+        int[] colDirection = {0, 0, -1, 1}; // Up, Down, Left, Right
+
+        Stack<int[]> stack = new Stack<>();
+        stack.push(new int[]{row, col});
+
+        while (!stack.isEmpty()) {
+            int[] current = stack.pop();
+            int currentRow = current[0];
+            int currentCol = current[1];
+
+            if (currentRow < 0 || currentRow >= board.length || currentCol < 0 || currentCol >= board[0].length || visited[currentRow][currentCol] || !board[currentRow][currentCol].isLand) {
+                continue;
+            }
+
+            visited[currentRow][currentCol] = true;
+            islandTiles.add(board[currentRow][currentCol]);
+
+            for (int k = 0; k < 4; k++) {
+                int newRow = currentRow + rowDirection[k];
+                int newCol = currentCol + colDirection[k];
+                stack.push(new int[]{newRow, newCol});
+            }
+        }
+    }
 
 
 
@@ -311,5 +317,8 @@ public class CombinedVisualizer extends JPanel {
 
     private static double dot(int[] g, double x, double y) {
         return g[0] * x + g[1] * y;
+    }
+    public static List<Human> getPeople(int x, int y){
+        return board[x][y].humans;
     }
 }
