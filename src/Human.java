@@ -18,12 +18,12 @@ public class Human {
 
         int x = rand.nextInt(3);
         x=x-1;
-        if(x==-1 && CombinedVisualizer.getLand(posX-1, posY))--posX;
-        else if(x==1 && CombinedVisualizer.getLand(posX+1, posY))++posX;
+        if(x==-1 && CombinedVisualizer.Board[posX-1][posY].isLand)--posX;
+        else if(x==1 && CombinedVisualizer.Board[posX+1][posY].isLand)++posX;
         int y = rand.nextInt(3);
         y=y-1;
-        if(y==-1 && CombinedVisualizer.getLand(posX, posY-1))--posY;
-        else if(y==1 && CombinedVisualizer.getLand(posX, posY+1))++posY;
+        if(y==-1 && CombinedVisualizer.Board[posX][posY-1].isLand)--posY;
+        else if(y==1 && CombinedVisualizer.Board[posX][posY+1].isLand)++posY;
     }
     public int getHealth() {
         return health;
