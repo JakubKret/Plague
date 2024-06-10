@@ -20,9 +20,8 @@ public class Virus {
             for (int y = 0; y < visualizer.HEIGHT; y++) {
                 if (visualizer.getBoard()[x][y].isLand && !visualizer.getBoard()[x][y].getPeople().isEmpty()){
                     for (int i = 0; i < visualizer.getBoard()[x][y].getPeople().size(); i++) {
-                                if (visualizer.getBoard()[x][y].getPeople().get(i).getCanInfect()) {
+                                if (visualizer.getBoard()[x][y].getPeople().get(i).getCanInfect() && !visualizer.getBoard()[x][y].getPeople().get(i).getIsDead()) {
                                     for (int z = 0; z < visualizer.getBoard()[x][y].getPeople().size(); z++) {
-
                                         if (contagiousness + rand.nextDouble() > visualizer.getBoard()[x][y].getPeople().get(z).getImmunity()) {
                                             visualizer.getBoard()[x][y].getPeople().get(z).giveSick();
                                         }
