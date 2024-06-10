@@ -34,7 +34,7 @@ public class Virus {
         }
         for (Human human : CombinedVisualizer.population) {
             if (human.isInfected) {
-                human.startToInfect();
+                human.canInfect = true;
             }
         }
     }
