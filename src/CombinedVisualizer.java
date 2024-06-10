@@ -159,7 +159,7 @@ public class CombinedVisualizer extends JPanel {
         for (ArrayList<Tile> islandTiles : lands) {
             Island island = new Island(islandTiles);
             islands.add(island);
-            Random rand = new Random;
+            Random rand = new Random();
             int x = rand.nextInt(3);
             x=x-1;
             Island.climate = x;
