@@ -8,6 +8,7 @@ public class Virus {
     void PatientZero() {
         int zero = rand.nextInt(CombinedVisualizer.population.size());
         CombinedVisualizer.population.get(zero).getSick();
+        CombinedVisualizer.population.get(zero).canInfect = true;
     }
 
     void VirusSpread() {
