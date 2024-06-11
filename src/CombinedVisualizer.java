@@ -18,6 +18,9 @@ public class CombinedVisualizer extends JPanel {//change name to Board , board t
     private static final double SCALE = 2.5;//1.3;
     private Tile[][] board = new Tile[WIDTH][HEIGHT];;
     private ArrayList<Human> population = new ArrayList<Human>();
+    private ArrayList<Animal> animalPopulation = new ArrayList<Animal>();
+    private double animalDensity = 0.1;
+    private int maxAnimalsPerTile=3;
     private ArrayList<Island> islands = new ArrayList<Island>();
     public CombinedVisualizer() {
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
@@ -48,17 +51,26 @@ public class CombinedVisualizer extends JPanel {//change name to Board , board t
                 int gray = fastFloor((noiseGray + fastFloor(1.75*gradientGray)) / 2.75); // Średnia z obu wartości
 
                 int rgb;
-                board[x][y] = new Tile(gray);
+                board[x][y] = new Tile(gray ,x,y);
                 if(board[x][y].isLand)
                 {
                 Random random = new Random();
                 if(random.nextDouble() < density){
                 int number = (int) (Math.random() * (maxPeoplePerTile+1));
                 for (int z = 0; z < number; z++) {
-                    Human human = new Human(x,y/*,board*/);
+                    Human human = new Human(x,y,board);
                     board[x][y].humans.add(human);
                     population.add(human);
-                }}}
+                }}
+                    random = new Random();
+                    if(random.nextDouble() < animalDensity){
+                        int number = (int) (Math.random() * (maxAnimalsPerTile+1));
+                        for (int z = 0; z < number; z++) {
+                            Animal animal = new Animal(x,y,board);
+                            board[x][y].animals.add(human);
+                            animalPopulation.add(animal);
+                        }}
+                }
 
                 if (board[x][y].isLand && !board[x][y].humans.isEmpty()) {//zoptymalizowac i polaczyc warunki by nie robic 2razy island?
                     int value = board[x][y].humans.size();
@@ -75,7 +87,8 @@ public class CombinedVisualizer extends JPanel {//change name to Board , board t
             }
         }
         groupIslands();
-        System.out.println(islands.size());
+        generateAirports();
+
     }
 
 
@@ -132,14 +145,22 @@ public class CombinedVisualizer extends JPanel {//change name to Board , board t
         for (int x = 0; x < WIDTH; x++) {
             for (int y = 0; y < HEIGHT; y++) {
                 int rgb;
+                //samoloty martwi zarazeni ludzi nietoperze szczury cure lad woda
+//                if (board[x][y].isAirport)
+//                {
+//                    //System.out.println(x + " "+ y);
+//                    rgb = 0<<16 | 0<<8 | 0;
+//                }
                 if (board[x][y].isLand && !board[x][y].humans.isEmpty()) {//zoptymalizowac i polaczyc warunki by nie robic 2razy island?
-                    int infected=0,value=0;
+                    int infected=0,value=0,dead=0;
                     for (Human h : board[x][y].humans) {
-                        if (h.getIsInfected()) {infected++;}
+                        if (h.getIsDead()) {dead++;}
+                        else if (h.getIsInfected()) {infected++;}
                         else {value++;}
                     }
-                    if (board[x][y].isAirport)
-                        rgb = 255;
+                    if (dead>0) {
+                        rgb = 0<<16 | 0<<8 | 0;
+                    }
                     else if (infected==0) {
                         rgb = (256 - fastFloor(value * 256 / (2 * maxPeoplePerTile) << 16)) | (256 - fastFloor(value * 256 / (2 * maxPeoplePerTile)) << 8) | fastFloor(256 - value * 256 / (2 * maxPeoplePerTile));
                     }
@@ -224,10 +245,10 @@ public class CombinedVisualizer extends JPanel {//change name to Board , board t
     private void generateAirports(){
         Random random = new Random();
         for (Island island : islands) {
-            for (int k=0; k<(1+fastFloor(island.getIslandLand().size())/500);k++) {
+            for (int k=0; k<(1/*+fastFloor(island.getIslandLand().size())/1500*/);k++) {
                 int r = random.nextInt(island.getIslandLand().size());
                 island.setAirport(island.getIslandLand().get(r));
-                island.getIslandLand().get(r).createAirport();
+                island.getIslandLand().get(r).setAirport();
             }
         }
     }
