@@ -25,7 +25,7 @@ public class Plane {
 
     private void calculateMove()
     {
-        if(!isMoving && !board[posX][posY].humans.isEmpty()){isMoving=true;}
+        if(!isMoving && !board[posX][posY].getPeople().isEmpty()){isMoving=true;}
         if (isMoving){
         Random random = new Random();
         int r = random.nextInt(islands.size());
@@ -33,7 +33,7 @@ public class Plane {
         x=islands.get(r).getAirport().posX;
         y=islands.get(r).getAirport().posY;
 
-        for (Human human : board[posX][posY].humans) {
+        for (Human human : board[posX][posY].getPeople()) {
             if (!human.getIsDead() && !human.getIsAfterFlight() && !human.getIsOnPlane()) {
                 human.setIsOnPlane();
                 this.humans.add(human);
@@ -42,7 +42,7 @@ public class Plane {
         }
         for (Human human : this.humans)
         {
-            board[posX][posY].humans.remove(human);
+            board[posX][posY].getPeople().remove(human);
         }
 
 //        int steps =fastFloor(Math.min(Math.abs(x-posX)/20,Math.abs(y-posY)/20));
@@ -58,10 +58,10 @@ public class Plane {
 
     public void Move(){
 
-        if (!isMoving && !board[posX][posY].humans.isEmpty()){isMoving=true;}
+        if (!isMoving && !board[posX][posY].getPeople().isEmpty()){isMoving=true;}
         if (!humans.isEmpty()){isMoving=true;}
         if(isMoving){
-        board[posX][posY].planes.remove(this);
+        board[posX][posY].getPlanes().remove(this);
         //System.out.println(posX+" "+posY);
         //System.out.println(x + " "+ y);
         //System.out.println(move[0]+" "+move[1]);
@@ -74,7 +74,7 @@ public class Plane {
                 human.setIsAfterFlight();
                 human.setIsOnPlane();
 
-                board[posX][posY].humans.add(human);
+                board[posX][posY].getPeople().add(human);
 
             }
             //System.out.println(humans.size());
@@ -84,7 +84,7 @@ public class Plane {
             calculateMove();
         }
 
-        board[posX][posY].planes.add(this);
+        board[posX][posY].getPlanes().add(this);
     }}
     private static int fastFloor(double x) {
         return x > 0 ? (int) x : (int) x - 1;

@@ -1,26 +1,33 @@
 import java.util.Random;
 
 public class Cure {
-    Board visualizer;
-    Virus virus;
 
-    public Cure(Board visualizer, Virus virus) {
-        this.visualizer = visualizer;
-        this.virus = virus;
-    }
+    ////[    VARIABLES    ]\\\\
 
     private int delay = 50, count = 0, speed = 6, iter = 1;
+    private double healRate = 0.45;
+    private Board visualizer;
+    private Virus virus;
+    private int height;
+    ////[    CONSTRUCTOR    ]\\\\
 
-    private double healRate = 0.15;
+    public Cure(Board visualizer, Virus virus, double healRate, int delay,int height) {
+        this.visualizer = visualizer;
+        this.virus = virus;
+        this.healRate = healRate;
+        this.delay = delay;
+        this.height = height;
+    }
 
-    public double getHealRate(){return healRate;}
+    ////[    METHODS    ]\\\\
+
     void cureStart() {
 
         if(count!=0 && count == delay){
             while(true) {
                 Random rand =  new Random();
-                int x = rand.nextInt(Board.WIDTH);
-                int y = rand.nextInt(Board.HEIGHT);
+                int x = rand.nextInt(height);
+                int y = rand.nextInt(height);
                 if (visualizer.getBoardTable()[x][y].isLand && !visualizer.getBoardTable()[x][y].getPeople().isEmpty()) {
                     for (int i = 0; i < visualizer.getBoardTable()[x][y].getPeople().size(); i++) {
                         if (visualizer.getBoardTable()[x][y].getPeople().get(i).getIsInfected() && !visualizer.getBoardTable()[x][y].getPeople().get(i).getIsDead()) {
@@ -45,8 +52,8 @@ public class Cure {
                 for (int k = 0; k < iter; k++) {
                     while (true) {
                         Random rand = new Random();
-                        int x = rand.nextInt(Board.WIDTH);
-                        int y = rand.nextInt(Board.HEIGHT);
+                        int x = rand.nextInt(height);
+                        int y = rand.nextInt(height);
                         if (visualizer.getBoardTable()[x][y].isLand && !visualizer.getBoardTable()[x][y].getPeople().isEmpty()) {
                             for (int i = 0; i < visualizer.getBoardTable()[x][y].getPeople().size(); i++) {
                                 if (visualizer.getBoardTable()[x][y].getPeople().get(i).getIsInfected() && !visualizer.getBoardTable()[x][y].getPeople().get(i).getIsDead()) {
@@ -54,7 +61,6 @@ public class Cure {
                                         visualizer.getBoardTable()[x][y].getPeople().get(z).cureEffect(healRate);
                                         if (virus.contagiousness + rand.nextDouble() < visualizer.getBoardTable()[x][y].getPeople().get(z).getImmunity() + healRate) {
                                             visualizer.getBoardTable()[x][y].getPeople().get(z).setCure();
-                                            System.out.println("Healed!");
                                         }
                                     }
                                 }
@@ -63,9 +69,13 @@ public class Cure {
                         }
                     }
                 }
-                if (iter < (Board.WIDTH* Board.HEIGHT)/150) iter++;
+                if (iter < (height* height)/150) iter++;
             }
         }
     }
+
+    ////[    GETTERS    ]\\\\
+
+    public double getHealRate(){return healRate;}
 
 }

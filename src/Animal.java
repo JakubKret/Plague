@@ -2,17 +2,28 @@ import java.util.Random;
 
 abstract class Animal {
 
+    ////[    VARIABLES    ]\\\\
+
     int posX;
     int posY;
     Tile[][] board;
-    boolean canInfect = false;
+    int height;
     boolean isInfected = false;
-    public Animal(int x, int y, Tile[][] board) {
+    boolean canInfect = false;
+
+    ////[    CONSTRUCTOR    ]\\\\
+
+    public Animal(int x, int y, Tile[][] board, int height) {
         this.posX = x;
         this.posY = y;
         this.board = board;
+        this.height = height;
     }
+
+    ////[    METHODS    ]\\\\
+
     public abstract void animalMove();
+
     public boolean getCanInfect(){return this.canInfect;}
 
     public boolean getIsInfected() {
@@ -20,36 +31,60 @@ abstract class Animal {
     }
 
     public void setIsInfected(){this.isInfected = true;}
+
+
+    ////[    GETTERS    ]\\\\
+
+    public int getPosX(){ return posX; }
+    public int getPosY(){ return posY; }
+
+
 }
 class Rat extends Animal{
-    public Rat(int x, int y, Tile[][] board) {
-        super(x, y, board);
+
+    ////[    CONSTRUCTOR    ]\\\\
+
+    public Rat(int x, int y, Tile[][] board,int height) {
+        super(x, y, board,height);
     }
+
+    ////[    METHODS    ]\\\\
+
+    @Override
     public void animalMove(){
         Random rand = new Random();
         int x = rand.nextInt(3);
         x=x-1;
         if(x==-1 && posX!=0 && board[posX-1][posY].isLand)    posX--;
-        else if(x==1 && posX!=Board.WIDTH-1 && board[posX+1][posY].isLand)   posX++;
+        else if(x==1 && posX!=height-1 && board[posX+1][posY].isLand)   posX++;
         int y = rand.nextInt(3);
         y=y-1;
         if(y==-1 && posY!=0 && board[posX][posY-1].isLand)    posY--;
-        else if(y==1 && posY!=Board.HEIGHT-1 && board[posX][posY+1].isLand)  posY++;
+        else if(y==1 && posY!=height-1 && board[posX][posY+1].isLand)  posY++;
     }
 }
 class Bat extends Animal{
-    public Bat(int x, int y, Tile[][] board) {
-        super(x, y, board);
+
+    ////[    CONSTRUCTOR    ]\\\\
+
+    public Bat(int x, int y, Tile[][] board,int height) {
+        super(x, y, board,height);
     }
+
+    ////[    METHODS    ]\\\\
+
+    @Override
     public void animalMove() {
         Random rand = new Random();
         int x = rand.nextInt(3);
         x=x-1;
         if(x==-1 && posX!=0)    posX--;
-        else if(x==1 && posX!=Board.WIDTH-1)   posX++;
+        else if(x==1 && posX!=height-1)   posX++;
         int y = rand.nextInt(3);
         y=y-1;
         if(y==-1 && posY!=0)    posY--;
-        else if(y==1 && posY!=Board.HEIGHT-1)  posY++;
+        else if(y==1 && posY!=height-1)  posY++;
     }
+
+
 }

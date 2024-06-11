@@ -10,25 +10,27 @@ public class Human {
     private boolean isOnPlane = false;
     private boolean isAfterFlight = false;
     private Tile[][] board;
+    private int height;
     Random rand = new Random();
-    public Human(int X,int Y, Tile[][] board){
+    public Human(int X,int Y, Tile[][] board, int height){
         this.posX = X;
         this.posY = Y;
         this.board = board;
         this.immunity = rand.nextDouble();
+        this.height = height;
     }
 
     public void Move(){
-        if(!isDead||!isOnPlane){
+        if(!isDead&&!isOnPlane){
             Random rand = new Random();
             int x = rand.nextInt(3);
             x=x-1;
             if(x==-1 && posX!=0 && board[posX-1][posY].isLand)    posX--;
-            else if(x==1 && posX!= Board.WIDTH-1 && board[posX+1][posY].isLand)   posX++;
+            else if(x==1 && posX!= height-1 && board[posX+1][posY].isLand)   posX++;
             int y = rand.nextInt(3);
             y=y-1;
             if(y==-1 && posY!=0 && board[posX][posY-1].isLand)    posY--;
-            else if(y==1 && posY!= Board.HEIGHT-1 && board[posX][posY+1].isLand)  posY++;
+            else if(y==1 && posY!= height-1 && board[posX][posY+1].isLand)  posY++;
             isAfterFlight = false;
         }}
 
