@@ -7,6 +7,7 @@ public class Tile {
     boolean isLand=false;
     private int landModifier = 100;
     public List<Human> humans = new ArrayList<Human>();
+    public List<Animal> animals = new ArrayList<Animal>();
     int posX,posY;
     public Tile(int rgbVal,int x,int y){
       if (rgbVal <= landModifier)
