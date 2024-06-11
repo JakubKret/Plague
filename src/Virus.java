@@ -8,26 +8,28 @@ public class Virus {
     double contagiousness = 0.2, deathRate = 0.15;
     Random rand = new Random();
     Random rand1 = new Random();
-    Board visualizer;
-    public Virus(Board visualizer) {
-        this.visualizer = visualizer;
+    Board board;
+    ////[    CONSTRUCTOR    ]\\\\
+    public Virus(Board board) {
+        this.board = board;
     }
+    ////[    METHODS    ]\\\\
     void patientZero() {
-        int zero = rand.nextInt(visualizer.getPopulation().size());
-        visualizer.getPopulation().get(zero).giveSick();
-        visualizer.getPopulation().get(zero).setCanInfect();
+        int zero = rand.nextInt(board.getPopulation().size());
+        board.getPopulation().get(zero).giveSick();
+        board.getPopulation().get(zero).setCanInfect();
     }
 
     void virusSpread() {
         if(contagiousness!=0){
-            for (int x = 0; x < visualizer.WIDTH; x++) {
-                for (int y = 0; y < visualizer.HEIGHT; y++) {
-                    if (visualizer.getBoardTable()[x][y].isLand && !visualizer.getBoardTable()[x][y].getPeople().isEmpty()) {
-                        for (int i = 0; i < visualizer.getBoardTable()[x][y].getPeople().size(); i++) {
-                            if (visualizer.getBoardTable()[x][y].getPeople().get(i).getCanInfect() && !visualizer.getBoardTable()[x][y].getPeople().get(i).getIsDead()) {
-                                for (int z = 0; z < visualizer.getBoardTable()[x][y].getPeople().size(); z++) {
-                                    if (contagiousness + rand.nextDouble() > visualizer.getBoardTable()[x][y].getPeople().get(z).getImmunity() + rand1.nextDouble()) {
-                                        visualizer.getBoardTable()[x][y].getPeople().get(z).giveSick();
+            for (int x = 0; x < board.WIDTH; x++) {
+                for (int y = 0; y < board.HEIGHT; y++) {
+                    if (board.getBoardTable()[x][y].isLand && !board.getBoardTable()[x][y].getPeople().isEmpty()) {
+                        for (int i = 0; i < board.getBoardTable()[x][y].getPeople().size(); i++) {
+                            if (board.getBoardTable()[x][y].getPeople().get(i).getCanInfect() && !board.getBoardTable()[x][y].getPeople().get(i).getIsDead()) {
+                                for (int z = 0; z < board.getBoardTable()[x][y].getPeople().size(); z++) {
+                                    if (contagiousness + rand.nextDouble() > board.getBoardTable()[x][y].getPeople().get(z).getImmunity() + rand1.nextDouble()) {
+                                        board.getBoardTable()[x][y].getPeople().get(z).giveSick();
                                     }
                                 }
                             }
@@ -37,14 +39,14 @@ public class Virus {
                 }
             }
             if(contagiousness!=0){
-                for (int x = 0; x < visualizer.WIDTH; x++) {
-                    for (int y = 0; y < visualizer.HEIGHT; y++) {
-                        if (visualizer.getBoardTable()[x][y].isLand && (!visualizer.getBoardTable()[x][y].getPeople().isEmpty() && !visualizer.getBoardTable()[x][y].getAnimals().isEmpty())) {
-                            for (int i = 0; i < visualizer.getBoardTable()[x][y].getAnimals().size(); i++) {
-                                if (visualizer.getBoardTable()[x][y].getAnimals().get(i).getCanInfect()) {
-                                    for (int z = 0; z < visualizer.getBoardTable()[x][y].getPeople().size(); z++) {
-                                        if (contagiousness + rand.nextDouble() > visualizer.getBoardTable()[x][y].getPeople().get(z).getImmunity() + rand1.nextDouble()) {
-                                            visualizer.getBoardTable()[x][y].getPeople().get(z).giveSick();
+                for (int x = 0; x < board.WIDTH; x++) {
+                    for (int y = 0; y < board.HEIGHT; y++) {
+                        if (board.getBoardTable()[x][y].isLand && (!board.getBoardTable()[x][y].getPeople().isEmpty() && !board.getBoardTable()[x][y].getAnimals().isEmpty())) {
+                            for (int i = 0; i < board.getBoardTable()[x][y].getAnimals().size(); i++) {
+                                if (board.getBoardTable()[x][y].getAnimals().get(i).getCanInfect()) {
+                                    for (int z = 0; z < board.getBoardTable()[x][y].getPeople().size(); z++) {
+                                        if (contagiousness + rand.nextDouble() > board.getBoardTable()[x][y].getPeople().get(z).getImmunity() + rand1.nextDouble()) {
+                                            board.getBoardTable()[x][y].getPeople().get(z).giveSick();
                                         }
                                     }
                                 }
@@ -55,20 +57,20 @@ public class Virus {
                     }
                 }
 
-            for(Human human : visualizer.getPopulation()) {
+            for(Human human : board.getPopulation()) {
                 if (human.getIsInfected()) {
                     human.setCanInfect();
                 }}}
     }
     public void animalVirus(){
         if(contagiousness!=0){
-            for (int x = 0; x < visualizer.WIDTH; x++) {
-                for (int y = 0; y < visualizer.HEIGHT; y++) {
-                    if (visualizer.getBoardTable()[x][y].isLand && !visualizer.getBoardTable()[x][y].getPeople().isEmpty()) {
-                        for (int i = 0; i < visualizer.getBoardTable()[x][y].getPeople().size(); i++) {
-                            if (visualizer.getBoardTable()[x][y].getPeople().get(i).getCanInfect() && !visualizer.getBoardTable()[x][y].getPeople().get(i).getIsDead()) {
-                                for (int z = 0; z < visualizer.getBoardTable()[x][y].getAnimals().size(); z++) {
-                                        visualizer.getBoardTable()[x][y].getAnimals().get(z).setIsInfected();
+            for (int x = 0; x < board.WIDTH; x++) {
+                for (int y = 0; y < board.HEIGHT; y++) {
+                    if (board.getBoardTable()[x][y].isLand && !board.getBoardTable()[x][y].getPeople().isEmpty()) {
+                        for (int i = 0; i < board.getBoardTable()[x][y].getPeople().size(); i++) {
+                            if (board.getBoardTable()[x][y].getPeople().get(i).getCanInfect() && !board.getBoardTable()[x][y].getPeople().get(i).getIsDead()) {
+                                for (int z = 0; z < board.getBoardTable()[x][y].getAnimals().size(); z++) {
+                                        board.getBoardTable()[x][y].getAnimals().get(z).setIsInfected();
                                 }
                             }
                         }
@@ -77,13 +79,13 @@ public class Virus {
                 }
             }
             if(contagiousness!=0){
-                for (int x = 0; x < visualizer.WIDTH; x++) {
-                    for (int y = 0; y < visualizer.HEIGHT; y++) {
-                        if (visualizer.getBoardTable()[x][y].isLand && (!visualizer.getBoardTable()[x][y].getPeople().isEmpty() && !visualizer.getBoardTable()[x][y].getAnimals().isEmpty())) {
-                            for (int i = 0; i < visualizer.getBoardTable()[x][y].getAnimals().size(); i++) {
-                                if (visualizer.getBoardTable()[x][y].getAnimals().get(i).getCanInfect()) {
-                                    for (int z = 0; z < visualizer.getBoardTable()[x][y].getAnimals().size(); z++) {
-                                            visualizer.getBoardTable()[x][y].getAnimals().get(z).setIsInfected();
+                for (int x = 0; x < board.WIDTH; x++) {
+                    for (int y = 0; y < board.HEIGHT; y++) {
+                        if (board.getBoardTable()[x][y].isLand && (!board.getBoardTable()[x][y].getPeople().isEmpty() && !board.getBoardTable()[x][y].getAnimals().isEmpty())) {
+                            for (int i = 0; i < board.getBoardTable()[x][y].getAnimals().size(); i++) {
+                                if (board.getBoardTable()[x][y].getAnimals().get(i).getCanInfect()) {
+                                    for (int z = 0; z < board.getBoardTable()[x][y].getAnimals().size(); z++) {
+                                            board.getBoardTable()[x][y].getAnimals().get(z).setIsInfected();
                                     }
                                 }
                             }
@@ -93,14 +95,14 @@ public class Virus {
                 }
             }
 
-            for(Human human : visualizer.getPopulation()) {
+            for(Human human : board.getPopulation()) {
                 if (human.getIsInfected()) {
                     human.setCanInfect();
                 }}}
     }
 
     public void virusAction() {
-        for (Human human : visualizer.getPopulation()) {
+        for (Human human : board.getPopulation()) {
             if (human.getIsInfected()) {
                 human.virusEffect(deathRate);
             }
