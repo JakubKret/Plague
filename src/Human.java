@@ -94,6 +94,9 @@ public class Human {
     public double getImmunity(){
         return immunity;
     }
+    public boolean getIsDead(){ return isDead;}
+    public void setCure(){this.isInfected = false;
+    this.canInfect=false;}
     public void virusEffect(double x){
         if(isInfected){
             x = x - (immunity/2);
@@ -101,8 +104,13 @@ public class Human {
             health = health - x;
         }
         if(health <= 0){
-            canInfect =false;
+            canInfect = false;
             isDead = true;
+        }
+    }
+    public void cureEffect(double x){
+        if(isInfected) {
+            health = health + x;
         }
     }
 }
