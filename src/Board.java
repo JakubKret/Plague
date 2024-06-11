@@ -9,6 +9,9 @@ import java.util.Random;
 import java.util.Stack;
 
 public class Board extends JPanel {//initialize random in beginning
+
+    ////[    VARIABLES    ]\\\\
+
     public static final int WIDTH = 400;
     public static final int HEIGHT = 400;
     private BufferedImage image;
@@ -23,44 +26,38 @@ public class Board extends JPanel {//initialize random in beginning
     private int maxAnimalsPerTile=3;
     private ArrayList<Island> islands = new ArrayList<Island>();
 
+    ////[    CONSTRUCTOR    ]\\\\
+
     public Board() {
         image = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
-        generateNoiseImage();
+        generateNoiseImage();//GENERATES NOISE, SUBTRACTS GRADIENT NOISE, GENERATES OBJECTS, APPLIES COLORS
         display();
     }
-    public ArrayList<Human> getPopulation() {
-        return population;
-    }
+
+    ////[    METHODS    ]\\\\
 
     private void generateNoiseImage() {
-        int[][] gradientValues = generateGradientValues(WIDTH, HEIGHT);
-
-
-
-
+        int[][] gradientValues = generateGradientValues(WIDTH, HEIGHT);//CIRCULAR GRADIENT
         for (int x = 0; x < WIDTH; x++) {
             for (int y = 0; y < HEIGHT; y++) {
                 double nx = x / (double) WIDTH;
                 double ny = y / (double) HEIGHT;
-                double noiseValue = noise(nx * 10, ny * 10); // Skala szumu
-                int noiseGray = (int) ((noiseValue + 1) * 127.5); // Przeskalowanie do zakresu 0-255
-
+                double noiseValue = noise(nx * 10, ny * 10); //NOISE SCALE
+                int noiseGray = (int) ((noiseValue + 1) * 127.5); //SCALING TO 0-255 RANGE
                 int gradientGray = gradientValues[x][y];
-
-                int gray = fastFloor((noiseGray + fastFloor(1.75*gradientGray)) / 2.75); // Średnia z obu wartości
-
+                int gray = fastFloor((noiseGray + fastFloor(1.75*gradientGray)) / 2.75); //CONNECTING BOTH GRADIENTS TO GET RID OF LAND NEAR BORDER
                 int rgb;
-                boardTable[x][y] = new Tile(gray ,x,y);
-                if(boardTable[x][y].isLand)
-                {
-                Random random = new Random();
-                if(random.nextDouble() < density){
-                int number = (int) (Math.random() * (maxPeoplePerTile+1));
-                for (int z = 0; z < number; z++) {
-                    Human human = new Human(x,y,boardTable);
-                    boardTable[x][y].humans.add(human);
-                    population.add(human);
-                }}
+                boardTable[x][y] = new Tile(gray, x, y);
+                if(boardTable[x][y].isLand) {//GENERATES OBJECTS ONLY ON LAND
+                    Random random = new Random();
+                    if(random.nextDouble() < density){//CHECKS IF IT SHOULD SPAWN PEOPLE IN THE TILE
+                        int number = (int) (Math.random() * (maxPeoplePerTile+1));//HOW MANY PEOPLE ON THE TILE
+                        for (int z = 0; z < number; z++) {//SPAWN HUMANS
+                            Human human = new Human(x,y,boardTable);
+                            boardTable[x][y].humans.add(human);
+                            population.add(human);
+                        }
+                    }
                     random = new Random();
                     if(random.nextDouble() < animalDensity){
                         int number = (int) (Math.random() * (maxAnimalsPerTile+1));
@@ -76,21 +73,17 @@ public class Board extends JPanel {//initialize random in beginning
                                 boardTable[x][y].animals.add(animal);
                                 animalPopulation.add(animal);
                             }
-                        }}
-
+                        }
+                    }
                 }
-
                 if (boardTable[x][y].isLand && !boardTable[x][y].humans.isEmpty()) {//zoptymalizowac i polaczyc warunki by nie robic 2razy island?
                     int value = boardTable[x][y].humans.size();
-                    rgb = (256-fastFloor(value*256/(2*maxPeoplePerTile) << 16)) | (256-fastFloor(value*256/(2*maxPeoplePerTile)) << 8) | fastFloor(256-value*256/(2*maxPeoplePerTile));
-
+                    rgb = (256-fastFloor(value*256/(2*maxPeoplePerTile) << 16)) | (256-fastFloor(value*256/(2*maxPeoplePerTile)) << 8) | fastFloor(256-value*256/(2*maxPeoplePerTile));//SHADES OF GREY DEPENDING ON AMOUNT OF PEOPLE
                 }
-                else if (boardTable[x][y].isLand)//w zaleznosci od ilosci ludzi(póżniej zwierząt) i czy zarazeni inne kolory
-                    rgb = (0 << 16) | (255 << 8) | 0; // Zielony
+                else if (boardTable[x][y].isLand)
+                    rgb = (0 << 16) | (255 << 8) | 0; //GREEN
                 else
-                    rgb = (0 << 16) | (0 << 8) | 255; // Niebieski
-
-
+                    rgb = (0 << 16) | (0 << 8) | 255; //BLUE
                 image.setRGB(x, y, rgb);
             }
         }
@@ -99,13 +92,10 @@ public class Board extends JPanel {//initialize random in beginning
         createPlanes();
     }
 
-
-
-    private int[][] generateGradientValues(int width, int height) {
+    private int[][] generateGradientValues(int width, int height) {//GENERATES CIRCULAR GRADIENT
         int[][] values = new int[width][height];
         Point2D center = new Point2D.Float(fastFloor(width / 2), fastFloor(height / 2));
         float radius = fastFloor(Math.max(width, height) / 1.25);
-
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 double dx = x - center.getX();
@@ -116,100 +106,86 @@ public class Board extends JPanel {//initialize random in beginning
                 values[x][y] = gray;
             }
         }
-
         return values;
     }
 
-    private static int fastFloor(double x) {
-        return x > 0 ? (int) x : (int) x - 1;
-    }
-
-    @Override
+    @Override//RESPONSIBLE FOR PAINTING
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
-
-        // Apply scaling
-        g2d.scale(SCALE, SCALE);
+        g2d.scale(SCALE, SCALE);//APPLIES SCALE
         g.drawImage(image, 0, 0, this);
     }
 
-    public  void display() {
+    public  void display() {//CREATES VISUALIZATION
         JFrame frame = new JFrame("Combined Visualizer");
         frame.add(this);
         frame.setSize((int) (WIDTH * SCALE), (int) (HEIGHT * SCALE));
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
-
         frame.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
                 repaint();
             }
         });
-
     }
-    public void refreshVisualization() {
+
+    public void refreshVisualization() {//UPDATES THE VISUALIZATION
         for (int x = 0; x < WIDTH; x++) {
             for (int y = 0; y < HEIGHT; y++) {
                 int rgb;
-                //samoloty martwi zarazeni ludzi nietoperze szczury cure lad woda
-                if (boardTable[x][y].planes.size() > 0)
+                //cure
+                if (boardTable[x][y].planes.size() > 0)//IF THERE IS A PLANE
                 {
-                    //System.out.println(x + " "+ y);
-                    rgb = 255 << 16 | 255 << 8 | 0;
+                    rgb = 255 << 16 | 255 << 8 | 0;//YELLOW
                 }
                 else if (boardTable[x][y].isLand && !boardTable[x][y].humans.isEmpty()) {//zoptymalizowac i polaczyc warunki by nie robic 2razy island?
                     int infected=0,value=0,dead=0;
-                    for (Human h : boardTable[x][y].humans) {
+                    for (Human h : boardTable[x][y].humans) {//COUNTS HUMANS OF DIFFERENT STATES
                         if (h.getIsDead()) {dead++;}
                         else if (h.getIsInfected()) {infected++;}
                         else {value++;}
                     }
-                    if (dead>0) {
-                        rgb = 0<<16 | 0<<8 | 0;
+                    if (dead>0) {//IF THERE ARE ANY DEAD
+                        rgb = 0<<16 | 0<<8 | 0;//BLACK
                     }
-                    else if (infected==0) {
+                    else if (infected==0) {//IF NO INFECTED SETS APPROPRIATE SHADE OF WHITE->GREY
                         rgb = (256 - fastFloor(value * 256 / (2 * maxPeoplePerTile) << 16)) | (256 - fastFloor(value * 256 / (2 * maxPeoplePerTile)) << 8) | fastFloor(256 - value * 256 / (2 * maxPeoplePerTile));
                     }
                     else {
-                        rgb = ((int) (Math.min((double)infected/value,1.0)*255) << 16) | (0 << 8) | 0;
+                        rgb = ((int) (Math.min((double)infected/value,1.0)*255) << 16) | (0 << 8) | 0;//DEPENDING ON INFECTED/HEALTHY RATIO SETS APPROPRIATE SHADE OF RED
                     }}
                     else if (boardTable[x][y].isLand && !boardTable[x][y].animals.isEmpty()) {
                         int rats = 0;
                         int bats = 0;
-                        for (Animal a : boardTable[x][y].animals) {
+                        for (Animal a : boardTable[x][y].animals) {//COUNTS RATS AND BATS ON THE TILE
                             if (a.getClass().getSimpleName().equals("Rat")) {rats++;}
                             else if (a.getClass().getSimpleName().equals("Bat")) {bats++;}
                         }
-                        if (bats>=rats) {rgb= 165 << 16 | 42 << 8 | 42;}
-                        else {rgb = 128 << 16 | 0 << 8 | 128;}
+                        if (bats>=rats) {rgb= 165 << 16 | 42 << 8 | 42;}//WHEN MORE BATS => BROWN
+                        else {rgb = 128 << 16 | 0 << 8 | 128;}//PURPLE
                     }
-                 else if (boardTable[x][y].isLand) {
-
-                    rgb = (0 << 16) | (255 << 8) | 0; // Green
-                } else {
-                    rgb = (0 << 16) | (0 << 8) | 255; // Blue
+                 else if (boardTable[x][y].isLand) {//FOR LAND
+                    rgb = (0 << 16) | (255 << 8) | 0; //GREEN
+                } else {//FOR WATER
+                    rgb = (0 << 16) | (0 << 8) | 255; //BLUE
                 }
-
-                image.setRGB(x, y, rgb);
+                image.setRGB(x, y, rgb);//SETS THE COLOR IN [X,Y] ON IMAGE
             }
         }
         repaint();
     }
 
-
-
-    private void groupIslands(){
+    private void groupIslands(){//CREATES TYPE ISLAND OBJECTS FOR EACH LAND GROUP
         ArrayList<ArrayList<Tile>> lands = findIslands();
-
-        // Pass each island to the island method
         for (ArrayList<Tile> islandTiles : lands) {
             Island island = new Island(islandTiles);
             islands.add(island);
         }
     }
-    private void createPlanes(){
+
+    private void createPlanes(){//FOR EACH AIRPORT/ISLAND CREATE A PLANE
         for (Island island : islands)
         {
             Plane plane = new Plane(island.getAirport().posX,island.getAirport().posY,islands,boardTable);
@@ -217,15 +193,13 @@ public class Board extends JPanel {//initialize random in beginning
         }
     }
 
-
-
-    // Method to find and group neighboring tiles
+    // FINDING AND GROUPING NEIGHBORING LANDS
     public ArrayList<ArrayList<Tile>> findIslands() {
         ArrayList<ArrayList<Tile>> lands = new ArrayList<>();
 
         boolean[][] visited = new boolean[WIDTH][HEIGHT];
 
-        // Iterate through each tile on the plane
+        //ITERATING THROUGH EACH TILE ON THE BOARD
         for (int i = 0; i < WIDTH; i++) {
             for (int j = 0; j < HEIGHT; j++) {
                 if (boardTable[i][j].isLand && !visited[i][j]) {
@@ -233,14 +207,12 @@ public class Board extends JPanel {//initialize random in beginning
                     dfs(boardTable, visited, i, j, islandTiles);
                     lands.add(islandTiles);
                 }
-
             }
         }
         return lands;
     }
 
-    // Depth-First Search to find all connected land tiles
-    private void dfs(Tile[][] boardTable, boolean[][] visited, int row, int col, ArrayList<Tile> islandTiles) {
+    private void dfs(Tile[][] boardTable, boolean[][] visited, int row, int col, ArrayList<Tile> islandTiles) {//FINDING ALL CONNECTED LANDS
         int[] rowDirection = {-1, 1, 0, 0}; // Up, Down, Left, Right
         int[] colDirection = {0, 0, -1, 1}; // Up, Down, Left, Right
 
@@ -295,7 +267,7 @@ public class Board extends JPanel {//initialize random in beginning
         }
     }
 
-    // Simplex noise functions (as defined in previous messages)
+    //SIMPLEX NOISE
     private static double noise(double xin, double yin) {
         double s = (xin + yin) * 0.5 * (Math.sqrt(3.0) - 1.0);
         int i = fastFloor(xin + s);
@@ -358,7 +330,25 @@ public class Board extends JPanel {//initialize random in beginning
         return 70.0 * (n0 + n1 + n2);
     }
 
-    private static final int[][] GRAD3 = {
+
+
+    ////[    GETTERS    ]\\\\
+
+    public Tile[][] getBoardTable() {return boardTable;}
+    public ArrayList<Human> getPopulation() {
+        return population;
+    }
+
+    ////[    SUPPORT METHODS    ]\\\\
+
+    private static double dot(int[] g, double x, double y) {return g[0] * x + g[1] * y;}//ILOCZYN SKALARNY
+    private static int fastFloor(double x) {
+        return x > 0 ? (int) x : (int) x - 1;
+    }//ZAOKRĄGLENIE W DÓŁ
+
+    ////[    NOISE STATICS    ]\\\\
+
+    private static final int[][] GRAD3 = { //ALL 3D GRADIENTS POSSIBILITIES
             {1, 1, 0}, {-1, 1, 0}, {1, -1, 0}, {-1, -1, 0},
             {1, 0, 1}, {-1, 0, 1}, {1, 0, -1}, {-1, 0, -1},
             {0, 1, 1}, {0, -1, 1}, {0, 1, -1}, {0, -1, -1}
@@ -384,11 +374,4 @@ public class Board extends JPanel {//initialize random in beginning
         }
     }
 
-    private static double dot(int[] g, double x, double y) {
-        return g[0] * x + g[1] * y;
-    }
-    public Tile[][] getBoardTable()
-    {
-        return boardTable;
-    }
 }
