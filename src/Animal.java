@@ -5,17 +5,23 @@ abstract class Animal {
     int posX;
     int posY;
     Tile[][] board;
+    boolean canInfect = false;
+    boolean isInfected = false;
     public Animal(int x, int y, Tile[][] board) {
         this.posX = x;
         this.posY = y;
         this.board = board;
     }
-
     public abstract void animalMove();
+    public boolean getCanInfect(){return this.canInfect;}
+
+    public boolean getIsInfected() {
+        return isInfected;
+    }
+
+    public void setIsInfected(){this.isInfected = true;}
 }
 class Rat extends Animal{
-
-
     public Rat(int x, int y, Tile[][] board) {
         super(x, y, board);
     }
