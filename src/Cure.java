@@ -11,6 +11,14 @@ public class Cure {
     private int height;
     ////[    CONSTRUCTOR    ]\\\\
 
+    /**
+     *
+     * @param visualizer Map
+     * @param virus Virus object
+     * @param healRate Variable affecting effectiveness of Cure
+     * @param delay Variable defining number of cycles before Cure starts to spread
+     * @param height Map size
+     */
     public Cure(Board visualizer, Virus virus, double healRate, int delay,int height) {
         this.visualizer = visualizer;
         this.virus = virus;
@@ -21,6 +29,9 @@ public class Cure {
 
     ////[    METHODS    ]\\\\
 
+    /**
+     * Method that starts spreading Cure after a number(delay) of cycles.
+     */
     void cureStart() {
 
         if(count!=0 && count == delay){
@@ -45,6 +56,10 @@ public class Cure {
         }
         count++;
     }
+
+    /**
+     * Method that spawns cure at random Tiles and uses it's effect on Human object and calculates if Human object gets cured from Virus.
+     */
     void cureSpread() {
 
         if(count > delay) {

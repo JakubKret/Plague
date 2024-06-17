@@ -13,6 +13,13 @@ abstract class Animal {
 
     ////[    CONSTRUCTOR    ]\\\\
 
+    /**
+     *
+     * @param x Objects' position X
+     * @param y Object's position Y
+     * @param board Map
+     * @param height Map size
+     */
     public Animal(int x, int y, Tile[][] board, int height) {
         this.posX = x;
         this.posY = y;
@@ -21,9 +28,8 @@ abstract class Animal {
     }
 
     ////[    METHODS    ]\\\\
-
     /**
-     * Metoda przemieszczajaca obiekt Animal na losowe pole wokół niego.
+     * Method used to randomly move Animal object to tile around it.
      */
     public abstract void animalMove();
     ////[    SETTERS    ]\\\\
@@ -47,7 +53,9 @@ class Rat extends Animal{
     }
 
     ////[    METHODS    ]\\\\
-
+    /**
+     * Method used to randomly move Animal object to tile around it (excluding water tiles).
+     */
     @Override
     public void animalMove(){
         Random rand = new Random();
@@ -70,7 +78,9 @@ class Bat extends Animal{
     }
 
     ////[    METHODS    ]\\\\
-
+    /**
+     * Method used to randomly move Animal object to tile around it (including water tiles).
+     */
     @Override
     public void animalMove() {
         Random rand = new Random();

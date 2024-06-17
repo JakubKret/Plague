@@ -14,6 +14,14 @@ public class Human {
     private int height;
     Random rand = new Random();
     ////[    CONSTRUCTOR    ]\\\\
+
+    /**
+     * Human object constructor.
+     * @param X Object's X position
+     * @param Y Object's Y position
+     * @param board Map
+     * @param height Map size
+     */
     public Human(int X,int Y, Tile[][] board, int height){
         this.posX = X;
         this.posY = Y;
@@ -25,7 +33,7 @@ public class Human {
     ////[    METHODS    ]\\\\
 
     /**
-     * Metoda przemieszczajaca obiekt Human na losowe pole wokół niego.
+     * Method used to randomly move Human object to tile around it (excluding water tiles).
      */
     public void Move(){
         if(!isDead&&!isOnPlane){
@@ -42,8 +50,8 @@ public class Human {
         }}
 
     /**
-     * Metoda wyliczająca efekt wirusa na dany obiekt Human.
-     * @param x - deathRate w klasie Virus.
+     * Method used to calculate Virus effect on object.
+     * @param x - deathRate from Virus class.
      */
     public void virusEffect(double x){
         if(isInfected){
@@ -58,8 +66,8 @@ public class Human {
     }
 
     /**
-     * Metoda wyliczająca efekt lekarstwa na dany obiekt Human.
-     * @param x - healRate w klasie Cure.
+     * Method used to calculate Cure effect on object.
+     * @param x - healRate from Cure class.
      */
     public void cureEffect(double x){
         if(isInfected) {

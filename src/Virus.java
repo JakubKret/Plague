@@ -18,7 +18,7 @@ public class Virus {
     ////[    METHODS    ]\\\\
 
     /**
-     * Metoda tworząca pierwszego zarażonego symulacji.
+     * Method that randomly chooses Human object which gets then infected as a first patient.
      */
     void patientZero() {
         int zero = rand.nextInt(board.getPopulation().size());
@@ -27,7 +27,7 @@ public class Virus {
     }
 
     /**
-     * Metoda rozprowadzająca wirusa między ludźmi (również od zwierząt).
+     * Method that spreads virus on Human objects.
      */
     void virusSpread() {
         if(contagiousness!=0){
@@ -73,7 +73,7 @@ public class Virus {
     }
 
     /**
-     * Metoda rozprowadzająca wirusa między zwierzętami (również od ludzi).
+     * Method that spreads virus on Animal objects.
      */
     public void animalVirus(){
         if(contagiousness!=0){
@@ -115,7 +115,7 @@ public class Virus {
     }
 
     /**
-     * Metoda wykonująca effekt wirusa na wszystkich zarażonych.
+     * Method that executes virus effect on each infected Human object.
      */
     public void virusAction() {
         for (Human human : board.getPopulation()) {
