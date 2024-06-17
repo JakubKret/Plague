@@ -18,13 +18,15 @@ public class Cure {
      * @param healRate Variable affecting effectiveness of Cure
      * @param delay Variable defining number of cycles before Cure starts to spread
      * @param height Map size
+     * @param iter starting amount of times that the Cure spawned
      */
-    public Cure(Board visualizer, Virus virus, double healRate, int delay,int height) {
+    public Cure(Board visualizer, Virus virus, double healRate, int delay,int height,int iter) {
         this.visualizer = visualizer;
         this.virus = virus;
         this.healRate = healRate;
         this.delay = delay;
         this.height = height;
+        this.iter = iter;
     }
 
     ////[    METHODS    ]\\\\

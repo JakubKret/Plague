@@ -15,6 +15,13 @@ public class Plane {
     int x;
     int y;
 
+    /**
+     * Creates a Plane in one of the Airports and sets its destination
+     * @param posX Plane x position
+     * @param posY Plane y position
+     * @param islands List of islands
+     * @param board State of the main Board
+     */
     public Plane(int posX, int posY, ArrayList<Island> islands, Tile[][] board){
         this.posX = posX;
         this.posY = posY;
@@ -23,6 +30,9 @@ public class Plane {
         calculateMove();
     }
 
+    /**
+     * Calculates next destination and if possible takes and leaves People
+     */
     private void calculateMove()
     {
         if(!isMoving && !board[posX][posY].getPeople().isEmpty()){isMoving=true;}
@@ -56,6 +66,9 @@ public class Plane {
         }
     }
 
+    /**
+     * If there are people on the Tile, moves the Plane
+     */
     public void Move(){
 
         if (!isMoving && !board[posX][posY].getPeople().isEmpty()){isMoving=true;}
@@ -86,12 +99,26 @@ public class Plane {
 
         board[posX][posY].getPlanes().add(this);
     }}
+
+    /**
+     * Rounding down
+     * @param x starting value
+     * @return value without the decimal part
+     */
     private static int fastFloor(double x) {
         return x > 0 ? (int) x : (int) x - 1;
     }
 
     ////[    GETTERS    ]\\\\
 
+    /**
+     * Gets the x position
+     * @return Plane x position
+     */
     public int getPosX()    {return posX;}
+    /**
+     * Gets the y position
+     * @return Plane y position
+     */
     public int getPosY()    {return posY;}
 }

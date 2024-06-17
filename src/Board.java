@@ -14,16 +14,16 @@ public class Board extends JPanel {
 
     public int width = 400;
     public int height = 400;
+    private BufferedImage image;
     private int maxPeoplePerTile=5;
     private double density=0.1;
     private double scale = 2.5;//1.3;
-    private double animalDensity = 0.05;
-    private int maxAnimalsPerTile=3;
-    private BufferedImage image;
     private Tile[][] boardTable = new Tile[width][height];;
     private ArrayList<Human> population = new ArrayList<Human>();
     private ArrayList<Plane> planePopulation = new ArrayList<Plane>();
     private ArrayList<Animal> animalPopulation = new ArrayList<Animal>();
+    private double animalDensity = 0.05;
+    private int maxAnimalsPerTile=3;
     private ArrayList<Island> islands = new ArrayList<Island>();
 
     //To pass on
@@ -33,12 +33,26 @@ public class Board extends JPanel {
     public final double deathRate;
     public final double healRate;
     public final int delay;
+    public int iter =10;
 
     ////[    CONSTRUCTOR    ]\\\\
 
+    /**
+     *  Board constructor - updates variables based on information from GUI and uses generateNoiseImage method
+     * @param speed Passes on the argument from GUI to the Virus class
+     * @param contagiousness Passes on the argument from GUI to the Virus class
+     * @param deathRate Passes on the argument from GUI to the Virus class
+     * @param healRate Passes on the argument from GUI to the Cure class
+     * @param delay Passes on the argument from GUI to the Cure class
+     * @param density Specifies chance of spawning Human objects on a Tile
+     * @param scale Scales the visualization window
+     * @param maxPeople Specifies maximum number of Human class objects on one Tile
+     * @param maxAnimals Specifies maximum number of Animal class objects on one Tile
+     * @param iter Passes on the argument from GUI to the Cure class
+     */
     public Board(int speed, double contagiousness, double deathRate,double healRate,
                  int delay, double density, double scale/*,int height*/,
-                 int maxPeople,int maxAnimals) {
+                 int maxPeople,int maxAnimals, int iter) {
         this.speed = speed;
         this.contagiousness = contagiousness/100.0;
         this.deathRate = deathRate/100.0;
@@ -50,15 +64,19 @@ public class Board extends JPanel {
         //this.height = height;
         this.maxPeoplePerTile = maxPeople;
         this.maxAnimalsPerTile = maxAnimals;
+        this.iter = iter;
         image = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
         generateNoiseImage();//GENERATES NOISE, SUBTRACTS GRADIENT NOISE, GENERATES OBJECTS, APPLIES COLORS
-        //display();
     }
 
     ////[    METHODS    ]\\\\
 
+
+    /**
+     * Combines both gradients and spawns Human and Animal class objects, applies colors and creates the starting version of the Board
+     */
     private void generateNoiseImage() {
-        int[][] gradientValues = generateGradientValues(width, height);//CIRCULAR GRADIENT
+        int[][] gradientValues = generateGradientValues();//CIRCULAR GRADIENT
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 double nx = x / (double) width;
@@ -113,6 +131,9 @@ public class Board extends JPanel {
         createPlanes();
     }
 
+    /**
+     * Keeps track of the population's Healthy to Infected to Dead ratio and displays it in the console
+     */
     public void showStats(){
         int healthy=0,dead=0,infected=0;
         for(Human human : population){
@@ -127,7 +148,9 @@ public class Board extends JPanel {
         System.out.println("Dead " + (int) (dead*100.0/pop) + "%");
     }
 
-
+    /**
+     * Sets off the move method in every human and relocates the objects on the Board
+     */
     public void movePopulation() {
         for (Human human : population) {
             boardTable[human.getPosX()][human.getPosY()].getPeople().remove(human);
@@ -135,7 +158,9 @@ public class Board extends JPanel {
             boardTable[human.getPosX()][human.getPosY()].getPeople().add(human);
         }
     }
-
+    /**
+     * Sets off the move method in every animal and relocates the objects on the Board
+     */
     public void moveAnimalPopulation() {
         for (Animal animal : animalPopulation) {
             boardTable[animal.getPosX()][animal.getPosY()].getAnimals().remove(animal);
@@ -144,6 +169,10 @@ public class Board extends JPanel {
         }
     }
 
+    /**
+     * Draws the image based on the other methods
+     * @param g instance of Graphics class
+     */
     @Override
     protected void paintComponent(Graphics g) {//RESPONSIBLE FOR PAINTING
         super.paintComponent(g);
@@ -152,6 +181,9 @@ public class Board extends JPanel {
         g.drawImage(image, 0, 0, this);
     }
 
+    /**
+     * creates the visualization
+     */
     public  void display() {//CREATES VISUALIZATION
         JFrame frame = new JFrame("Combined Visualizer");
         frame.add(this);
@@ -166,12 +198,15 @@ public class Board extends JPanel {
         });
     }
 
+    /**
+     * It is a method that is more complex, but still very similar to the generateNoiseImage method, it keeps track of and updates everything that changes (every tick) after start
+     */
     public void refreshVisualization() {//UPDATES THE VISUALIZATION
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 int rgb;
                 //cure
-                if (boardTable[x][y].getPlanes().size() > 0)//IF THERE IS A PLANE
+                if (!boardTable[x][y].getPlanes().isEmpty())//IF THERE IS A PLANE
                 {
                     rgb = 255 << 16 | 255 << 8 | 0;//YELLOW
                 }
@@ -204,7 +239,7 @@ public class Board extends JPanel {
                  else if (boardTable[x][y].isLand) {//FOR LAND
                     rgb = (0 << 16) | (255 << 8) | 0; //GREEN
                 } else {//FOR WATER AND BATS
-                     if(boardTable[x][y].animals.size()>0)
+                     if(!boardTable[x][y].animals.isEmpty())
                          rgb= 165 << 16 | 42 << 8 | 42;
                      else
                     rgb = (0 << 16) | (0 << 8) | 255; //BLUE
@@ -217,13 +252,9 @@ public class Board extends JPanel {
 
     ////[    GROUPING ISLANDS    ]\\\\
 
-    private void createPlanes(){//FOR EACH AIRPORT/ISLAND CREATE A PLANE
-        for (Island island : islands)
-        {
-            Plane plane = new Plane(island.getAirport().posX,island.getAirport().posY,islands,boardTable);
-            planePopulation.add(plane);
-        }
-    }
+    /**
+     * Creates Island instances for each land group
+     */
     private void groupIslands(){//CREATES TYPE ISLAND OBJECTS FOR EACH LAND GROUP
         ArrayList<ArrayList<Tile>> lands = findIslands();
         for (ArrayList<Tile> islandTiles : lands) {
@@ -231,6 +262,11 @@ public class Board extends JPanel {
             islands.add(island);
         }
     }
+
+    /**
+     * Groups land Tiles together
+     * @return List of Lists with neighbouring Tiles
+     */
     public ArrayList<ArrayList<Tile>> findIslands() {// FINDING AND GROUPING NEIGHBORING LANDS
         ArrayList<ArrayList<Tile>> lands = new ArrayList<>();
 
@@ -248,6 +284,16 @@ public class Board extends JPanel {
         }
         return lands;
     }
+
+    /**
+     * Uses Depth-first Search algorithm to search for land
+     * @param boardTable Array that has every Tile
+     * @param visited Provides information if a Tile has been checked already
+     * @param row Provides row number
+     * @param col Provides column number
+     * @param islandTiles Stores the results
+     */
+    //Depth-first search alg
     private void dfs(Tile[][] boardTable, boolean[][] visited, int row, int col, ArrayList<Tile> islandTiles) {//FINDING ALL CONNECTED LANDS
         int[] rowDirection = {-1, 1, 0, 0}; // Up, Down, Left, Right
         int[] colDirection = {0, 0, -1, 1}; // Up, Down, Left, Right
@@ -277,6 +323,9 @@ public class Board extends JPanel {
 
     ////[    PLANES    ]\\\\
 
+    /**
+     * Generates an Airport on every Island at random Tile
+     */
     private void generateAirports(){
         Random random = new Random();
         for (Island island : islands) {
@@ -287,6 +336,10 @@ public class Board extends JPanel {
             }
         }
     }
+
+    /**
+     * Sets off the Move method in every Plane and relocates the objects on the Board
+     */
     public void movePlanes(){
         for (Plane plane : planePopulation) {
             boardTable[plane.getPosX()][plane.getPosY()].getPlanes().remove(plane);
@@ -295,8 +348,25 @@ public class Board extends JPanel {
         }
     }
 
+    /**
+     * For each Island/Airport creates a Plane
+     */
+    private void createPlanes(){//FOR EACH AIRPORT/ISLAND CREATE A PLANE
+        for (Island island : islands)
+        {
+            Plane plane = new Plane(island.getAirport().posX,island.getAirport().posY,islands,boardTable);
+            planePopulation.add(plane);
+        }
+    }
+
     ////[    NOISE    ]\\\\
 
+    /**
+     * Genertes a Simplex Noise in order to create a randomized look of the Board
+     * @param xin noise X scale
+     * @param yin noise Y scale
+     * @return
+     */
     private static double noise(double xin, double yin) { //SIMPLEX NOISE
         double s = (xin + yin) * 0.5 * (Math.sqrt(3.0) - 1.0);
         int i = fastFloor(xin + s);
@@ -358,7 +428,12 @@ public class Board extends JPanel {
 
         return 70.0 * (n0 + n1 + n2);
     }
-    private int[][] generateGradientValues(int width, int height) {//GENERATES CIRCULAR GRADIENT
+
+    /**
+     * Generates a circular gradient to combine it with main one in order to get rid of land in the border of the map
+     * @return a circular gradient
+     */
+    private int[][] generateGradientValues() {//GENERATES CIRCULAR GRADIENT
         int[][] values = new int[width][height];
         Point2D center = new Point2D.Float(fastFloor(width / 2), fastFloor(height / 2));
         float radius = fastFloor(Math.max(width, height) / 1.25);
@@ -377,13 +452,29 @@ public class Board extends JPanel {
 
     ////[    GETTERS    ]\\\\
 
+    /**
+     * Passes the main Board
+     * @return main Board
+     */
     public Tile[][] getBoardTable() {return boardTable;}
+
+    /**
+     * Passes the List containing every Human
+     * @return population List
+     */
     public ArrayList<Human> getPopulation() {
         return population;
     }
 
     ////[    SUPPORT METHODS    ]\\\\
 
+    /**
+     * Counts the scalar product
+     * @param g needed vector
+     * @param x needed value
+     * @param y needed value
+     * @return result of the equation
+     */
     private static double dot(int[] g, double x, double y) {return g[0] * x + g[1] * y;}//ILOCZYN SKALARNY
     private static int fastFloor(double x) {
         return x > 0 ? (int) x : (int) x - 1;

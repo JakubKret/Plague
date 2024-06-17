@@ -14,18 +14,23 @@ public class ConfigScreen extends JFrame {
     private JSlider densitySlider;
     private JSlider maxPeopleSlider;
     private JSlider maxAnimalsSlider;
+    private JSlider iterSlider;
     private JButton startButton;
     private ConfigListener listener;
 
+    /**
+     * Sets up all sliders in order to let the User set starting values
+     * @param listener object of ConfigListener class
+     */
     public ConfigScreen(ConfigListener listener) {
         this.listener = listener;
         setTitle("Configuration");
         setSize(600, 300);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new GridLayout(10, 1));
+        setLayout(new GridLayout(11, 1));
         speedSlider = new JSlider(1, 1000, 10);
         contagiousnessSlider = new JSlider(0,100,30);// /100
-        deathRateSlider = new JSlider(0,100,15);// /100
+        deathRateSlider = new JSlider(0,200,15);// /100
         healRateSlider = new JSlider(0, 100, 15); // /100
         densitySlider = new JSlider(0, 100, 10); // /100
         delaySlider = new JSlider(0,1000,200);
@@ -33,6 +38,7 @@ public class ConfigScreen extends JFrame {
         //heightSlider = new JSlider(0,1000,400);//
         maxPeopleSlider = new JSlider(0,20,5);
         maxAnimalsSlider = new JSlider(0,20,1);
+        iterSlider = new JSlider(1,1000,10);
 
         JPanel speedPanel = new JPanel(new BorderLayout());
         speedPanel.add(new JLabel("Speed:"), BorderLayout.NORTH);
@@ -74,6 +80,10 @@ public class ConfigScreen extends JFrame {
         maxAnimalsPanel.add(new JLabel("Max Animal per Tile:"), BorderLayout.NORTH);
         maxAnimalsPanel.add(maxAnimalsSlider, BorderLayout.CENTER);
 
+        JPanel iterPanel = new JPanel(new BorderLayout());
+        iterPanel.add(new JLabel("Startowa ilość leku:"), BorderLayout.NORTH);
+        iterPanel.add(iterSlider, BorderLayout.CENTER);
+
         startButton = new JButton("Start");
         add(speedPanel);
         add(contagiousnessPanel);
@@ -85,9 +95,14 @@ public class ConfigScreen extends JFrame {
 //        add(heightPanel);
         add(maxPeoplePanel);
         add(maxAnimalsPanel);
+        add(iterPanel);
         add(startButton);
 
         startButton.addActionListener(new ActionListener() {
+            /**
+             * Gets the values from Sliders
+             * @param e the event to be processed
+             */
             @Override
             public void actionPerformed(ActionEvent e) {
                 int speed = speedSlider.getValue();
@@ -100,7 +115,8 @@ public class ConfigScreen extends JFrame {
 //                int height = heightSlider.getValue();
                 int maxPeople = maxPeopleSlider.getValue();
                 int maxAnimals = maxAnimalsSlider.getValue();
-                listener.onConfigSelected(speed, contagiousness,deathRate,healRate,delay,density,scale,/*,height*/maxPeople,maxAnimals);
+                int iter = iterSlider.getValue();
+                listener.onConfigSelected(speed, contagiousness,deathRate,healRate,delay,density,scale,/*,height*/maxPeople,maxAnimals,iter);
                 dispose(); // Close the configuration screen
             }
         });
@@ -109,6 +125,6 @@ public class ConfigScreen extends JFrame {
     public interface ConfigListener {
         void onConfigSelected(int speed, double contagiousness, double deathRate,double healRate,
                               int delay, double density, double scale/*,int height*/,
-                              int maxPeople,int maxAnimals);
+                              int maxPeople,int maxAnimals, int iter);
     }
 }
