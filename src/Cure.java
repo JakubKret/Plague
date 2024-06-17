@@ -4,7 +4,7 @@ public class Cure {
 
     ////[    VARIABLES    ]\\\\
 
-    private int delay = 50, count = 0, speed = 6, iter = 1;
+    private int delay = 50, count = 0, speed = 2, iter = 1000;
     private double healRate = 0.45;
     private Board visualizer;
     private Virus virus;

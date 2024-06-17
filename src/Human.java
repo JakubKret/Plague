@@ -1,6 +1,7 @@
 import java.util.Random;
 
 public class Human {
+    ////[    VARIABLES    ]\\\\
     private int posX,posY;
     private double health = 40;
     private double immunity = 0.1;
@@ -12,6 +13,7 @@ public class Human {
     private Tile[][] board;
     private int height;
     Random rand = new Random();
+    ////[    CONSTRUCTOR    ]\\\\
     public Human(int X,int Y, Tile[][] board, int height){
         this.posX = X;
         this.posY = Y;
@@ -20,6 +22,11 @@ public class Human {
         this.height = height;
     }
 
+    ////[    METHODS    ]\\\\
+
+    /**
+     * Metoda przemieszczajaca obiekt Human na losowe pole wokół niego.
+     */
     public void Move(){
         if(!isDead&&!isOnPlane){
             Random rand = new Random();
@@ -34,6 +41,10 @@ public class Human {
             isAfterFlight = false;
         }}
 
+    /**
+     * Metoda wyliczająca efekt wirusa na dany obiekt Human.
+     * @param x - deathRate w klasie Virus.
+     */
     public void virusEffect(double x){
         if(isInfected){
             x = x - (immunity/2);
@@ -45,6 +56,11 @@ public class Human {
             isDead = true;
         }
     }
+
+    /**
+     * Metoda wyliczająca efekt lekarstwa na dany obiekt Human.
+     * @param x - healRate w klasie Cure.
+     */
     public void cureEffect(double x){
         if(isInfected) {
             health = health + x;
@@ -53,7 +69,7 @@ public class Human {
 
     ////[    SETTERS    ]\\\\
 
-    public void giveSick()  {this.isInfected = true;}
+    public void giveSick(){this.isInfected = true;}
     public void setCanInfect(){this.canInfect = true;}
     public void setCure(){
         this.isInfected = false;

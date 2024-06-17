@@ -22,19 +22,17 @@ abstract class Animal {
 
     ////[    METHODS    ]\\\\
 
+    /**
+     * Metoda przemieszczajaca obiekt Animal na losowe pole wokół niego.
+     */
     public abstract void animalMove();
-
+    ////[    SETTERS    ]\\\\
+    public void setIsInfected(){this.isInfected = true;}
+    ////[    GETTERS    ]\\\\
     public boolean getCanInfect(){return this.canInfect;}
-
     public boolean getIsInfected() {
         return isInfected;
     }
-
-    public void setIsInfected(){this.isInfected = true;}
-
-
-    ////[    GETTERS    ]\\\\
-
     public int getPosX(){ return posX; }
     public int getPosY(){ return posY; }
 

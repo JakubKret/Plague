@@ -16,12 +16,19 @@ public class Virus {
         this.deathRate = deathRate;
     }
     ////[    METHODS    ]\\\\
+
+    /**
+     * Metoda tworząca pierwszego zarażonego symulacji.
+     */
     void patientZero() {
         int zero = rand.nextInt(board.getPopulation().size());
         board.getPopulation().get(zero).giveSick();
         board.getPopulation().get(zero).setCanInfect();
     }
 
+    /**
+     * Metoda rozprowadzająca wirusa między ludźmi (również od zwierząt).
+     */
     void virusSpread() {
         if(contagiousness!=0){
             for (int x = 0; x < board.height; x++) {
@@ -64,6 +71,10 @@ public class Virus {
                     human.setCanInfect();
                 }}}
     }
+
+    /**
+     * Metoda rozprowadzająca wirusa między zwierzętami (również od ludzi).
+     */
     public void animalVirus(){
         if(contagiousness!=0){
             for (int x = 0; x < board.height; x++) {
@@ -103,6 +114,9 @@ public class Virus {
                 }}}
     }
 
+    /**
+     * Metoda wykonująca effekt wirusa na wszystkich zarażonych.
+     */
     public void virusAction() {
         for (Human human : board.getPopulation()) {
             if (human.getIsInfected()) {

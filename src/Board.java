@@ -14,16 +14,16 @@ public class Board extends JPanel {
 
     public int width = 400;
     public int height = 400;
-    private BufferedImage image;
     private int maxPeoplePerTile=5;
     private double density=0.1;
     private double scale = 2.5;//1.3;
+    private double animalDensity = 0.05;
+    private int maxAnimalsPerTile=3;
+    private BufferedImage image;
     private Tile[][] boardTable = new Tile[width][height];;
     private ArrayList<Human> population = new ArrayList<Human>();
     private ArrayList<Plane> planePopulation = new ArrayList<Plane>();
     private ArrayList<Animal> animalPopulation = new ArrayList<Animal>();
-    private double animalDensity = 0.05;
-    private int maxAnimalsPerTile=3;
     private ArrayList<Island> islands = new ArrayList<Island>();
 
     //To pass on
