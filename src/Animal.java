@@ -8,13 +8,19 @@ abstract class Animal {
     int posY;
     Tile[][] board;
     int height;
+    /**
+     * Variable used to storing information if object is infected.
+     */
     boolean isInfected = false;
+    /**
+     * Variable used to determine if object can infect in each cycle.
+     */
     boolean canInfect = false;
 
     ////[    CONSTRUCTOR    ]\\\\
 
     /**
-     *
+     * Applies input values into each Animal object values.
      * @param x Objects' position X
      * @param y Object's position Y
      * @param board Map
@@ -47,7 +53,9 @@ abstract class Animal {
 class Rat extends Animal{
 
     ////[    CONSTRUCTOR    ]\\\\
-
+    /**
+     * Animal constructor.
+     */
     public Rat(int x, int y, Tile[][] board,int height) {
         super(x, y, board,height);
     }
@@ -73,6 +81,9 @@ class Bat extends Animal{
 
     ////[    CONSTRUCTOR    ]\\\\
 
+    /**
+     * Animal constructor.
+     */
     public Bat(int x, int y, Tile[][] board,int height) {
         super(x, y, board,height);
     }

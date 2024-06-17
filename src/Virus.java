@@ -10,6 +10,13 @@ public class Virus {
     Random rand1 = new Random();
     Board board;
     ////[    CONSTRUCTOR    ]\\\\
+
+    /**
+     * Applies input values into each Animal object values.
+     * @param board Map
+     * @param contagiousness Variable defining chances for Human object to get infected
+     * @param deathRate Variable deciding amount of damage taken each cycle if human object is infected
+     */
     public Virus(Board board, double contagiousness, double deathRate) {
         this.board = board;
         this.contagiousness = contagiousness;

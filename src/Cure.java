@@ -3,16 +3,33 @@ import java.util.Random;
 public class Cure {
 
     ////[    VARIABLES    ]\\\\
-
+    /**
+     * delay Variable defining number of cycles before Cure starts to spread,
+     * side variable used for some iterations,
+     * speed amount of cycles between cure spawns,
+     * iter starting amount of tiles that the Cure is spawned
+     */
     private int delay = 50, count = 0, speed = 2, iter = 1000;
+    /**
+     * Variable affecting effectiveness of Cure
+     */
     private double healRate = 0.45;
+    /**
+     * Map
+     */
     private Board visualizer;
+    /**
+     * Virus class object
+     */
     private Virus virus;
+    /**
+     * Map size
+     */
     private int height;
     ////[    CONSTRUCTOR    ]\\\\
 
     /**
-     *
+     * Applies input values into each Cure object values.
      * @param visualizer Map
      * @param virus Virus object
      * @param healRate Variable affecting effectiveness of Cure
@@ -93,6 +110,10 @@ public class Cure {
 
     ////[    GETTERS    ]\\\\
 
+    /**
+     * Method that returns value of healRate
+     * @return double healRate
+     */
     public double getHealRate(){return healRate;}
 
 }

@@ -2,21 +2,46 @@ import java.util.Random;
 
 public class Human {
     ////[    VARIABLES    ]\\\\
+    /**
+     * Object's X and Y position
+     */
     private int posX,posY;
+    /**
+     * Human object's health which decides on their virus survivability.
+     */
     private double health = 40;
+    /**
+     * Variable used to determine if Human object gets infected.
+     */
     private double immunity = 0.1;
+    /**
+     * Variable used to storing information if object is infected.
+     */
     private boolean isInfected=false;
+    /**
+     * Variable used to determine if object can infect in each cycle.
+     */
     private boolean canInfect = false;
+    /**
+     * Variable used to storing information if objects health reached 0.
+     */
     private boolean isDead = false;
+
     private boolean isOnPlane = false;
     private boolean isAfterFlight = false;
+    /**
+     * Map
+     */
     private Tile[][] board;
+    /**
+     * Map size
+     */
     private int height;
     Random rand = new Random();
     ////[    CONSTRUCTOR    ]\\\\
 
     /**
-     * Human object constructor.
+     * Applies input values into each Cure object values.
      * @param X Object's X position
      * @param Y Object's Y position
      * @param board Map
@@ -77,8 +102,17 @@ public class Human {
 
     ////[    SETTERS    ]\\\\
 
+    /**
+     * Method used to change isInfected value to true
+     */
     public void giveSick(){this.isInfected = true;}
+    /**
+     * Method used to change canInfect value to true
+     */
     public void setCanInfect(){this.canInfect = true;}
+    /**
+     * Method used to change isInfected and canInfect values to false
+     */
     public void setCure(){
         this.isInfected = false;
         this.canInfect=false;
@@ -88,12 +122,40 @@ public class Human {
 
     ////[    GETTERS    ]\\\\
 
+    /**
+     * Method used to get health value
+     * @return double health
+     */
     public double getHealth() {return health;}
+    /**
+     * Method used to get position X
+     * @return int position X
+     */
     public int getPosX()    {return posX;}
+    /**
+     * Method used to get position Y
+     * @return int position Y
+     */
     public int getPosY()    {return posY;}
+    /**
+     * Method used to get isInfected value
+     * @return boolean isInfected
+     */
     public boolean getIsInfected()  {return isInfected;}
+    /**
+     * Method used to get canInfect value
+     * @return boolean canInfect
+     */
     public boolean getCanInfect()   {return canInfect;}
+    /**
+     * Method used to get value of immunity
+     * @return double Immunity
+     */
     public double getImmunity() {return immunity;}
+    /**
+     * Method used to get isDead value
+     * @return boolean isDead
+     */
     public boolean getIsDead()  { return isDead;}
     public boolean getIsOnPlane()   {return isOnPlane;}
     public boolean getIsAfterFlight()   {return isAfterFlight;}
