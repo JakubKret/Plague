@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="BoardTest" tests="11" skipped="0" failures="0" errors="0" timestamp="2024-06-30T17:26:01" hostname="DESKTOP-7QDEC14" time="0.583">
+  <properties/>
+  <testcase name="testVirusSpread()" classname="BoardTest" time="0.248"/>
+  <testcase name="testMovePopulation()" classname="BoardTest" time="0.033"/>
+  <testcase name="testAnimalPopulation()" classname="BoardTest" time="0.039"/>
+  <testcase name="testBatMove()" classname="BoardTest" time="0.043"/>
+  <testcase name="testPeopleNotSpawningOnWater()" classname="BoardTest" time="0.025"/>
+  <testcase name="testBoardInitialization()" classname="BoardTest" time="0.031"/>
+  <testcase name="testPatientZero()" classname="BoardTest" time="0.042"/>
+  <testcase name="testPlaneCreating()" classname="BoardTest" time="0.026"/>
+  <testcase name="testPopulation()" classname="BoardTest" time="0.025"/>
+  <testcase name="testVirusAction()" classname="BoardTest" time="0.028"/>
+  <testcase name="testIslandCreating()" classname="BoardTest" time="0.035"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
